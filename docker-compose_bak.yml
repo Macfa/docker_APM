@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+  httpd:
+    image: httpd:alpine3.15
+    ports:
+      - 80:80
+    restart: always
+    networks:
+      - app-network    
+    container_name: httpd
+  mariadb:
+    image: mariadb:10.7.3
+    ports: 
+      - 3306:3306
+    restart: always    
+    environment:
+      - TZ=Asia/Seoul
+      - MARIADB_ROOT_PASSWORD=dkfmadl
+      - MARIADB_DATABASE=testDB
+      - MYSQL_USER="choi"
+      - MYSQL_PASSWORD="1234"
+    container_name: mariadb
+    networks:
+      - app-network    
+  php:
+    image: php:fpm-alpine3.15
+    volumes:
+      - ./php:/var/www/html/
+    restart: always
+    ports:
+      - 80:80
+    container_name: php
+    networks:
+      - app-network    
+
+networks:
+  app-network:
+    driver: bridge
+
